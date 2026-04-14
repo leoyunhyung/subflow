@@ -1,0 +1,28 @@
+Django==4.2.*
+djangorestframework==3.14.*
+django-filter==23.5
+drf-spectacular==0.27.*
+django-cors-headers==4.3.*
+
+# Database
+psycopg2-binary==2.9.*
+
+# Celery + Redis
+celery==5.3.*
+django-celery-beat==2.5.*
+redis==5.0.*
+
+# Auth
+djangorestframework-simplejwt==5.3.*
+
+# Utils
+python-decouple==3.8
+python-dateutil==2.9.*
+requests==2.31.*
+gunicorn==21.2.*
+
+# Testing
+pytest==7.4.*
+pytest-django==4.7.*
+pytest-cov==4.1.*
+factory-boy==3.3.*
