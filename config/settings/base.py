@@ -37,6 +37,7 @@ LOCAL_APPS = [
     "apps.subscriptions",
     "apps.payments",
     "apps.settlements",
+    "apps.churn_prediction",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -163,3 +164,26 @@ TOSS_SECRET_KEY = config("TOSS_SECRET_KEY", default="")
 # SubFlow
 # ---------------------------------------------------------------------------
 DEFAULT_COMMISSION_RATE = config("DEFAULT_COMMISSION_RATE", default=10, cast=int)
+
+# ---------------------------------------------------------------------------
+# Anthropic (Claude) - 구독 이탈 예측
+# ---------------------------------------------------------------------------
+ANTHROPIC_API_KEY = config("ANTHROPIC_API_KEY", default="")
+CHURN_LLM_PROVIDER = config("CHURN_LLM_PROVIDER", default="claude")
+CHURN_LLM_MODEL = config("CHURN_LLM_MODEL", default="claude-opus-4-5")
+
+# ---------------------------------------------------------------------------
+# Celery Beat Schedule
+# ---------------------------------------------------------------------------
+from celery.schedules import crontab  # noqa: E402
+
+CELERY_BEAT_SCHEDULE = {
+    "predict-churn-daily": {
+        "task": "apps.churn_prediction.tasks.predict_churn_batch",
+        "schedule": crontab(hour=3, minute=0),
+    },
+    "expire-subscriptions-hourly": {
+        "task": "apps.settlements.tasks.expire_subscriptions",
+        "schedule": crontab(minute=0),
+    },
+}
